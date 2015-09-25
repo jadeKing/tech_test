@@ -8,11 +8,14 @@ describe 'Calculator' do
     expect(result).to eq 7.0
   end
 
-  xit 'calculates monthly repayments' do
+  it 'calculates monthly repayments' do
+    rate = 7.0
+    amount = 1000
+    result = overall_repayment(rate, amount)
+    expect(result).to eq 1232.93
   end
 
   xit 'calculates overall repayments' do
   end
 
 end
- 

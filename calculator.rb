@@ -11,3 +11,8 @@ def calculate_rate(rates, request)
     end
     result = (sum / temp.length * 100).round(1)
 end
+
+def overall_repayment(rate, amount)
+  rate = rate /100
+  (amount * (1 + rate/12)**36).round(2)
+end
