@@ -18,7 +18,7 @@ describe 'Calculator' do
   it 'calculates overall repayments' do
     amount = 1232.93
     result = monthly_repayments(amount)
-    expect(result).to eq 34.24
+    expect(result).to eq 34.25
   end
 
 end

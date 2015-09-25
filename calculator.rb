@@ -16,3 +16,7 @@ def overall_repayment(rate, amount)
   rate = rate /100
   (amount * (1 + rate/12)**36).round(2)
 end
+
+def monthly_repayments(amount)
+  (amount / 36).round(2)
+end
