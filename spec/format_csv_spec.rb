@@ -1,5 +1,5 @@
-require 'format_csv'
-require 'quote_app'
+require './format_csv'
+require './quote_app'
 
 describe 'format csv' do
   let(:q) { QuoteApp.new { include FormatCsv } }
