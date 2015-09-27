@@ -1,22 +1,41 @@
-def calculate_rate(rates, request)
-    amounts = rates.sort_by(&:first)
-    temp = []
-    loan_count = 0
-    sum = 0
-    amounts.each do |x, y|
-      loan_count = loan_count + y
-      sum = sum + x
-      temp.push([x,y])
-      break if loan_count > request
+module Calculator
+
+  def calculate_quote(rates = {}, request_amount)
+    rate = calculate_rate(rates, request_amount.to_f)
+    result = nil
+    unless rate == false
+      overall = calculate_overall_repayment(rate, request_amount.to_f)
+      monthly = calculate_monthly_repayments(overall)
+      result = { rate:rate,
+                 monthly: monthly,
+                 overall: overall }
     end
-    result = (sum / temp.length * 100).round(1)
-end
+    result
+  end
 
-def overall_repayment(rate, amount)
-  rate = rate /100
-  (amount * (1 + rate/12)**36).round(2)
-end
+  def calculate_rate(rates, request_amount)
+      amounts = rates.sort_by { |x| x["Rate"].to_f }
+      temp = []
+      loan_count = 0
+      sum = 0
+      amounts.each do |n|
+        loan_count = loan_count + n["Available"].to_f
+        sum = sum + n["Rate"].to_f
+        temp.push([n])
+        break if loan_count > request_amount
+      end
+      loan_count < request_amount ? false : (sum / temp.length * 100)
+  end
 
-def monthly_repayments(amount)
-  (amount / 36).round(2)
+  private
+
+  def calculate_overall_repayment(rate, request_amount)
+    rate = rate /100.00
+    (request_amount * (1 + rate/12)**36)
+  end
+
+  def calculate_monthly_repayments(overall_amount)
+    (overall_amount / 36)
+  end
+
 end
