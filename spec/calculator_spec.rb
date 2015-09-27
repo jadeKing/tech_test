@@ -1,24 +1,41 @@
 require './calculator'
+require './quote_app'
+require 'csv'
 
 describe 'Calculator' do
-  it 'calculates best rate' do
-    rates = [[0.075, 480],[0.071, 520],[0.069, 560]]
-    request = 1000
-    result = calculate_rate(rates, request)
-    expect(result).to eq 7.0
-  end
+  # before(:each) do
+  #   rates = [{"Lender"=>"Bob", "Rate"=>"0.071", "Available"=>"640"},
+  #            {"Lender"=>"Jane", "Rate"=>"0.069", "Available"=>"480"}]
+  #   amount = 1000
+  # end
 
-  it 'calculates monthly repayments' do
-    rate = 7.0
-    amount = 1000
-    result = overall_repayment(rate, amount)
-    expect(result).to eq 1232.93
-  end
+  describe 'Quote Calculator' do
+    let(:q) { QuoteApp.new { include Calculator } }
 
-  it 'calculates overall repayments' do
-    amount = 1232.93
-    result = monthly_repayments(amount)
-    expect(result).to eq 34.25
-  end
+    it 'calculates best rate' do
+      rates = [{"Lender"=>"Bob", "Rate"=>"0.071", "Available"=>"640"},
+               {"Lender"=>"Jane", "Rate"=>"0.069", "Available"=>"480"}]
+               amount = 1000
 
+      result = q.calculate_quote(rates, amount)
+      expect(result[:rate].round(1)).to eq 7.0
+    end
+
+    it 'calculates monthly repayments' do
+      rates = [{"Lender"=>"Bob", "Rate"=>"0.071", "Available"=>"640"},
+               {"Lender"=>"Jane", "Rate"=>"0.069", "Available"=>"480"}]
+      rate = 7.0
+      amount = 1000
+      result = q.calculate_quote(rates, amount)
+      expect(result[:monthly].round(2)).to eq 34.25
+    end
+
+    it 'calculates overall repayments' do
+      rates = [{"Lender"=>"Bob", "Rate"=>"0.071", "Available"=>"640"},
+               {"Lender"=>"Jane", "Rate"=>"0.069", "Available"=>"480"}]
+      amount = 1000
+      result = q.calculate_quote(rates, amount)
+      expect(result[:overall].round(2)).to eq 1232.93
+    end
+  end
 end
