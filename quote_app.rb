@@ -12,7 +12,7 @@ end
 
 def run_quote(market, amount, qa)
   csv = market
-  result =  qa.calculate_quote(qa.format_file(csv), ARGV[1])
+  result =  qa.calculate_quote(qa.format_file(csv), amount)
   final = result == nil ? "Not enough money for your loan" : Quote.new(result).display_quote
   puts final
 end
